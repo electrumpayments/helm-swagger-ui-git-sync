@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swagger-stratosphere-v2
+  labels:
+    app: swagger-stratosphere-v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: swagger-stratosphere-v2
+  template:
+    metadata:
+      labels:
+        app: swagger-stratosphere-v2
+    spec:
+      containers:
+        - name: swagger-ui
+          image: "swaggerapi/swagger-ui:v5.17.14"
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: SWAGGER_JSON
+              value: /git/current/swagger/swagger.yaml
+            - name: DEFAULT_MODEL_RENDERING
+              value: model
+          volumeMounts:
+            - name: git-content
+              mountPath: /git
+            - name: docker-init
+              mountPath: /docker-entrypoint.d/50-git-sync-init.sh
+              subPath: git-sync-init.sh
+          resources:
+            requests:
+              cpu: 20m
+              memory: 64Mi
+            limits:
+              memory: 64Mi
+
+        - name: git-sync
+          image: registry.k8s.io/git-sync/git-sync:v4.0.0
+          args:
+            - --repo=git@github.com:electrumpayments/stratosphere.git
+            - --ref=main
+            - --depth=1
+            - --period=60s
+            - --link=current
+            - --root=/git
+            - --ssh=true
+            - --ssh-key-file=/etc/git-secret/id_rsa
+            - --ssh-known-hosts=false
+            - --verbose=6
+          volumeMounts:
+            - name: git-content
+              mountPath: /git
+            - name: ssh-key
+              mountPath: /etc/git-secret
+              readOnly: true
+          securityContext:
+            runAsUser: 65533 # git-sync user
+          resources:
+            requests:
+              cpu: 20m
+              memory: 32Mi
+            limits:
+              memory: 32Mi
+      volumes:
+        - name: git-content
+          emptyDir: {}
+        - name: ssh-key
+          defaultMode: 0400
+          secret:
+            secretName: redoc
+            items:
+              - key: deploy-key
+                path: id_rsa
+              - key: deploy-key-pub
+                path: id_rsa.pub
+        - name: docker-init
+          configMap:
+            name: {{ $.Release.Name }}-docker-init
+      securityContext: # volume mounting help
+        fsGroup: 65533
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $.Release.Name }}-docker-init
+data:
+  git-sync-init.sh: |
+    #!/bin/sh
+
+    swagger_path="{{$.Values.git.swagger_path}}"
+    echo "Waiting for swagger file to appear at repo-relative path: $swagger_path"
+    until test -f "/git/current/$swagger_path"; do
+      echo "Swagger file not present. Waiting for git-sync..."
+      sleep 5
+    done
+    echo "Swagger file present!"
