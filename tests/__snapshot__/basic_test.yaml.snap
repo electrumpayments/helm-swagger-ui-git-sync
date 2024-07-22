@@ -1,0 +1,98 @@
+defaults:
+  1: |
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      labels:
+        io.electrum/app: swagger-my-app
+      name: swagger-my-app
+      replicas: 1
+      selector:
+        matchLabels:
+          io.electrum/app: swagger-my-app
+      template:
+        metadata:
+          labels:
+            io.electrum/app: swagger-my-app
+        spec:
+          containers:
+            - env:
+                - name: SWAGGER_JSON
+                  value: /git/current/src/main/resources/openapi.yaml
+                - name: DEFAULT_MODEL_RENDERING
+                  value: model
+              image: swaggerapi/swagger-ui:v5.17.14
+              name: swagger-ui
+              ports:
+                - containerPort: 8080
+                  name: http
+              resources:
+                limits:
+                  memory: 64Mi
+                requests:
+                  cpu: 20m
+                  memory: 64Mi
+              volumeMounts:
+                - mountPath: /git
+                  name: git-content
+                - mountPath: /docker-entrypoint.d/50-git-sync-init.sh
+                  name: docker-init
+                  subPath: git-sync-init.sh
+            - args:
+                - --repo=git@github.com:swagger-api/swagger-petstore.git
+                - --ref=main
+                - --depth=1
+                - --period=60s
+                - --link=current
+                - --root=/git
+                - --verbose=6
+              image: registry.k8s.io/git-sync/git-sync:v4.0.0
+              name: git-sync
+              resources:
+                limits:
+                  memory: 32Mi
+                requests:
+                  cpu: 20m
+                  memory: 32Mi
+              securityContext:
+                runAsUser: 65533
+              volumeMounts:
+                - mountPath: /git
+                  name: git-content
+          securityContext:
+            fsGroup: 65533
+          volumes:
+            - emptyDir: {}
+              name: git-content
+            - configMap:
+                name: swagger-my-app-docker-init
+              name: docker-init
+  2: |
+    apiVersion: v1
+    data:
+      git-sync-init.sh: |
+        #!/bin/sh
+        swagger_path="src/main/resources/openapi.yaml"
+        echo "Waiting for swagger file to appear at repo-relative path: $swagger_path"
+        until test -f "/git/current/$swagger_path"; do
+          echo "Swagger file not present. Waiting for git-sync..."
+          sleep 5
+        done
+        echo "Swagger file present!"
+    kind: ConfigMap
+    metadata:
+      name: swagger-my-app-docker-init
+  3: |
+    apiVersion: v1
+    kind: Service
+    metadata:
+      labels:
+        io.electrum/app: swagger-my-app
+      name: swagger-my-app
+    spec:
+      ports:
+        - name: http
+          port: 80
+          targetPort: http
+      selector:
+        io.electrum/app: swagger-my-app

@@ -1,2 +1,12 @@
 git:
+  repo_url: null
+  ref: main
+  refresh_period: 60s
   swagger_path: swagger/swagger.yaml
+  ssh:
+    existing_secret_name: null
+    existing_secret_key: null
+
+images:
+  swagger_ui: "swaggerapi/swagger-ui:v5.17.14"
+  git_sync: "registry.k8s.io/git-sync/git-sync:v4.0.0"
