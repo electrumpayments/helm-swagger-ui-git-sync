@@ -1,13 +1,9 @@
 suite: Basic templating
 values:
-  - ../values.yaml
+  - test-values.yaml
 release:
   name: swagger-my-app
   namespace: my-app-ns
-set:
-  git:
-    repo_url: git@github.com:swagger-api/swagger-petstore.git
-    swagger_path: src/main/resources/openapi.yaml
 tests:
   - it: defaults
     asserts:

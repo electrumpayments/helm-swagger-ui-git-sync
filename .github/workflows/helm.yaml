@@ -12,7 +12,7 @@ jobs:
       - uses: d3adb5/helm-unittest-action@v2
         with:
           unittest-version: v0.4.2
-      - run: helm lint .
+      - run: helm lint . -f tests/test-values.yaml
   
   update-readme:
     runs-on: ubuntu-latest
@@ -27,6 +27,8 @@ jobs:
           npm install
           npm install pkg
           node_modules/.bin/pkg . -o readmegen
+
+      - uses: actions/checkout@v4
 
       - name: Update README
         run: /tmp/readmegen/readmegen -v values.yaml -r README.md
