@@ -1,3 +1,27 @@
+custom git config:
+  1: |
+    - --repo=git@github.com:swagger-api/swagger-petstore.git
+    - --ref=dev
+    - --depth=1
+    - --period=12h
+    - --link=current
+    - --root=/git
+    - --verbose=6
+  2: |
+    - name: SWAGGER_JSON
+      value: /git/current/my/cool/path.yaml
+    - name: DEFAULT_MODEL_RENDERING
+      value: model
+  3: |
+    git-sync-init.sh: |
+      #!/bin/sh
+      swagger_path="my/cool/path.yaml"
+      echo "Waiting for swagger file to appear at repo-relative path: $swagger_path"
+      until test -f "/git/current/$swagger_path"; do
+        echo "Swagger file not present. Waiting for git-sync..."
+        sleep 5
+      done
+      echo "Swagger file present!"
 defaults:
   1: |
     apiVersion: apps/v1
@@ -6,6 +30,7 @@ defaults:
       labels:
         io.electrum/app: swagger-my-app
       name: swagger-my-app
+    spec:
       replicas: 1
       selector:
         matchLabels:
@@ -96,3 +121,45 @@ defaults:
           targetPort: http
       selector:
         io.electrum/app: swagger-my-app
+with ssh:
+  1: |
+    args:
+      - --repo=git@github.com:swagger-api/swagger-petstore.git
+      - --ref=main
+      - --depth=1
+      - --period=60s
+      - --link=current
+      - --root=/git
+      - --ssh=true
+      - --ssh-key-file=/etc/git-secret/id_rsa
+      - --ssh-known-hosts=false
+      - --verbose=6
+    image: registry.k8s.io/git-sync/git-sync:v4.0.0
+    name: git-sync
+    resources:
+      limits:
+        memory: 32Mi
+      requests:
+        cpu: 20m
+        memory: 32Mi
+    securityContext:
+      runAsUser: 65533
+    volumeMounts:
+      - mountPath: /git
+        name: git-content
+      - mountPath: /etc/git-secret
+        name: ssh-key
+        readOnly: true
+  2: |
+    - emptyDir: {}
+      name: git-content
+    - defaultMode: 256
+      name: ssh-key
+      secret:
+        items:
+          - key: deploy-key
+            path: id_rsa
+        secretName: my-app-secret
+    - configMap:
+        name: swagger-my-app-docker-init
+      name: docker-init

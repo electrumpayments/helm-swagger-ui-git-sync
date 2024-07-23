@@ -1,0 +1,41 @@
+name: Helm workflow
+on:
+  push:
+    branches:
+      - "**"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: d3adb5/helm-unittest-action@v2
+        with:
+          unittest-version: v0.4.2
+      - run: helm lint .
+  
+  update-readme:
+    runs-on: ubuntu-latest
+    needs: ["test"]
+    if: ${{ github.ref != 'refs/heads/main' }}
+    steps:
+      - name: Install readme-generator
+        run: |
+          mkdir /tmp/readmegen
+          cd /tmp/readmegen
+          git clone --depth 1 https://github.com/bitnami/readme-generator-for-helm .
+          npm install
+          npm install pkg
+          node_modules/.bin/pkg . -o readmegen
+
+      - name: Update README
+        run: /tmp/readmegen/readmegen -v values.yaml -r README.md
+
+      - name: Commit README
+        uses: EndBug/add-and-commit@v9
+        with:
+          pull: "--rebase"
+          add: README.md
+          pathspec_error_handling: exitImmediately
+          message: Updating README.md [skip ci]
+          push: true

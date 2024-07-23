@@ -4,6 +4,7 @@ metadata:
   name: {{ $.Release.Name | quote }}
   labels:
     io.electrum/app: {{ $.Release.Name | quote }}
+spec:
   replicas: 1
   selector:
     matchLabels:
