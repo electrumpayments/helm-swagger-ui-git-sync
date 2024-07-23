@@ -1,12 +1,12 @@
 ## @section Git
 git:
-  ## @param git.repo_url [string] SSH or HTTPS url to the repo to clone
+  ## @param git.repo_url (required) SSH or HTTPS url of the repo to clone
   repo_url: null
-  ## @param git.ref [string] branch or tag to check out
+  ## @param git.ref branch or tag to check out
   ref: main
-  ## @param git.refresh_period [string] how frequently to poll for changes
+  ## @param git.refresh_period how frequently to poll for changes
   refresh_period: 60s
-  ## @param git.swagger_path [string] repo-relative path to the target swagger file (OpenAPI spec)
+  ## @param git.swagger_path repo-relative path to the target swagger file (OpenAPI spec)
   swagger_path: swagger/swagger.yaml
   ssh:
     ## @param git.ssh.existing_secret_name [string, nullable] if set, configure git-sync to use SSH. This secret should contain a private SSH key and should be created outside this chart
@@ -16,7 +16,7 @@ git:
 
 ## @section Images
 images:
-  ## @param images.swagger_ui [string] The swagger-ui image to use
+  ## @param images.swagger_ui The swagger-ui image to use
   swagger_ui: "swaggerapi/swagger-ui:v5.17.14"
-  ## @param images.git_sync [string] The git-sync image to use
+  ## @param images.git_sync The git-sync image to use
   git_sync: "registry.k8s.io/git-sync/git-sync:v4.0.0"
