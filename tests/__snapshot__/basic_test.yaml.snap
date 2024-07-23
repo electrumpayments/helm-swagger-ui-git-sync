@@ -1,3 +1,14 @@
+additional envs:
+  1: |
+    - name: SWAGGER_JSON
+      value: /git/current/src/main/resources/openapi.yaml
+    - name: DEFAULT_MODEL_EXPAND_DEPTH
+      value: "5"
+    - name: TRY_IT_OUT_ENABLED
+      valueFrom:
+        configMapKeyRef:
+          key: try_it_out
+          name: my-app-cm
 custom git config:
   1: |
     - --repo=git@github.com:swagger-api/swagger-petstore.git
@@ -10,8 +21,6 @@ custom git config:
   2: |
     - name: SWAGGER_JSON
       value: /git/current/my/cool/path.yaml
-    - name: DEFAULT_MODEL_RENDERING
-      value: model
   3: |
     git-sync-init.sh: |
       #!/bin/sh
@@ -44,8 +53,6 @@ defaults:
             - env:
                 - name: SWAGGER_JSON
                   value: /git/current/src/main/resources/openapi.yaml
-                - name: DEFAULT_MODEL_RENDERING
-                  value: model
               image: swaggerapi/swagger-ui:v5.17.14
               name: swagger-ui
               ports:

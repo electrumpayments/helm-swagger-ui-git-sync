@@ -1,22 +1,24 @@
-## @section Git
-git:
-  ## @param git.repo_url (required) SSH or HTTPS url of the repo to clone
+## @section Git-sync
+git_sync:
+  ## @param git_sync.repo_url (required) SSH or HTTPS url of the repo to clone
   repo_url: null
-  ## @param git.ref branch or tag to check out
+  ## @param git_sync.ref branch or tag to check out
   ref: main
-  ## @param git.refresh_period how frequently to poll for changes
+  ## @param git_sync.refresh_period how frequently to poll for changes
   refresh_period: 60s
-  ## @param git.swagger_path repo-relative path to the target swagger file (OpenAPI spec)
+  ## @param git_sync.swagger_path repo-relative path to the target swagger file (OpenAPI spec)
   swagger_path: swagger/swagger.yaml
   ssh:
-    ## @param git.ssh.existing_secret_name [string, nullable] if set, configure git-sync to use SSH. This secret should contain a private SSH key and should be created outside this chart
+    ## @param git_sync.ssh.existing_secret_name [string, nullable] if set, configure git-sync to use SSH. This secret should contain a private SSH key and should be created outside this chart
     existing_secret_name: null
-    ## @param git.ssh.existing_secret_key [string, nullable] The key of the secret that contains the private SSH key
+    ## @param git_sync.ssh.existing_secret_key [string, nullable] The key of the secret that contains the private SSH key
     existing_secret_key: null
+  ## @param git_sync.image The git-sync image to use
+  image: "registry.k8s.io/git-sync/git-sync:v4.0.0"
 
-## @section Images
-images:
-  ## @param images.swagger_ui The swagger-ui image to use
-  swagger_ui: "swaggerapi/swagger-ui:v5.17.14"
-  ## @param images.git_sync The git-sync image to use
-  git_sync: "registry.k8s.io/git-sync/git-sync:v4.0.0"
+## @section Swagger UI
+swagger_ui:
+  ## @param swagger_ui.env [array] Additional [environment variables](https://github.com/swagger-api/swagger-ui/blob/master/docs/usage/configuration.md) to add to the swagger-ui container.
+  env: []
+  ## @param swagger_ui.image The swagger-ui image to use
+  image: "swaggerapi/swagger-ui:v5.17.14"

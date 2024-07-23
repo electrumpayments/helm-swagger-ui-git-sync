@@ -16,15 +16,16 @@ spec:
     spec:
       containers:
         - name: swagger-ui
-          image: {{ $.Values.images.swagger_ui | quote }}
+          image: {{ $.Values.swagger_ui.image | quote }}
           ports:
             - name: http
               containerPort: 8080
           env:
             - name: SWAGGER_JSON
-              value: "/git/current/{{$.Values.git.swagger_path}}"
-            - name: DEFAULT_MODEL_RENDERING
-              value: model
+              value: "/git/current/{{$.Values.git_sync.swagger_path}}"
+            {{- if $.Values.swagger_ui.env -}}
+            {{- $.Values.swagger_ui.env | toYaml | nindent 12 }}
+            {{- end }}
           volumeMounts:
             - name: git-content
               mountPath: /git
@@ -39,15 +40,15 @@ spec:
               memory: 64Mi
 
         - name: git-sync
-          image: {{ $.Values.images.git_sync | quote }}
+          image: {{ $.Values.git_sync.image | quote }}
           args:
-            - --repo={{ required "git.repo_url must be set" $.Values.git.repo_url }}
-            - --ref={{ $.Values.git.ref }}
+            - --repo={{ required "git_sync.repo_url must be set" $.Values.git_sync.repo_url }}
+            - --ref={{ $.Values.git_sync.ref }}
             - --depth=1
-            - --period={{ $.Values.git.refresh_period }}
+            - --period={{ $.Values.git_sync.refresh_period }}
             - --link=current
             - --root=/git
-            {{- if $.Values.git.ssh.existing_secret_name }}
+            {{- if $.Values.git_sync.ssh.existing_secret_name }}
             - --ssh=true
             - --ssh-key-file=/etc/git-secret/id_rsa
             - --ssh-known-hosts=false
@@ -56,7 +57,7 @@ spec:
           volumeMounts:
             - name: git-content
               mountPath: /git
-            {{- if $.Values.git.ssh.existing_secret_name }}
+            {{- if $.Values.git_sync.ssh.existing_secret_name }}
             - name: ssh-key
               mountPath: /etc/git-secret
               readOnly: true
@@ -72,13 +73,13 @@ spec:
       volumes:
         - name: git-content
           emptyDir: {}
-        {{- if $.Values.git.ssh.existing_secret_name }}
+        {{- if $.Values.git_sync.ssh.existing_secret_name }}
         - name: ssh-key
           defaultMode: 0400
           secret:
-            secretName: {{ $.Values.git.ssh.existing_secret_name | quote }}
+            secretName: {{ $.Values.git_sync.ssh.existing_secret_name | quote }}
             items:
-              - key: {{ required "git.ssh.existing_secret_key must be set explicitly" $.Values.git.ssh.existing_secret_key | quote }}
+              - key: {{ required "git_sync.ssh.existing_secret_key must be set explicitly" $.Values.git_sync.ssh.existing_secret_key | quote }}
                 path: id_rsa
         {{- end }}
         - name: docker-init
@@ -94,7 +95,7 @@ metadata:
 data:
   git-sync-init.sh: |
     #!/bin/sh
-    swagger_path="{{$.Values.git.swagger_path}}"
+    swagger_path="{{$.Values.git_sync.swagger_path}}"
     echo "Waiting for swagger file to appear at repo-relative path: $swagger_path"
     until test -f "/git/current/$swagger_path"; do
       echo "Swagger file not present. Waiting for git-sync..."
