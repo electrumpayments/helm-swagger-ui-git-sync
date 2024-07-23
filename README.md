@@ -9,20 +9,21 @@ secrets - if using SSH you must create the relevant secret by external means.
 
 ## Parameters
 
-### Git
+### Git-sync
 
-| Name                           | Description                                                                                                                  | Value                  |
-| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
-| `git.repo_url`                 | (required) SSH or HTTPS url of the repo to clone                                                                             | `nil`                  |
-| `git.ref`                      | branch or tag to check out                                                                                                   | `main`                 |
-| `git.refresh_period`           | how frequently to poll for changes                                                                                           | `60s`                  |
-| `git.swagger_path`             | repo-relative path to the target swagger file (OpenAPI spec)                                                                 | `swagger/swagger.yaml` |
-| `git.ssh.existing_secret_name` | if set, configure git-sync to use SSH. This secret should contain a private SSH key and should be created outside this chart | `nil`                  |
-| `git.ssh.existing_secret_key`  | The key of the secret that contains the private SSH key                                                                      | `nil`                  |
+| Name                                | Description                                                                                                                  | Value                                      |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| `git_sync.repo_url`                 | (required) SSH or HTTPS url of the repo to clone                                                                             | `nil`                                      |
+| `git_sync.ref`                      | branch or tag to check out                                                                                                   | `main`                                     |
+| `git_sync.refresh_period`           | how frequently to poll for changes                                                                                           | `60s`                                      |
+| `git_sync.swagger_path`             | repo-relative path to the target swagger file (OpenAPI spec)                                                                 | `swagger/swagger.yaml`                     |
+| `git_sync.ssh.existing_secret_name` | if set, configure git-sync to use SSH. This secret should contain a private SSH key and should be created outside this chart | `nil`                                      |
+| `git_sync.ssh.existing_secret_key`  | The key of the secret that contains the private SSH key                                                                      | `nil`                                      |
+| `git_sync.image`                    | The git-sync image to use                                                                                                    | `registry.k8s.io/git-sync/git-sync:v4.0.0` |
 
-### Images
+### Swagger UI
 
-| Name                | Description                 | Value                                      |
-| ------------------- | --------------------------- | ------------------------------------------ |
-| `images.swagger_ui` | The swagger-ui image to use | `swaggerapi/swagger-ui:v5.17.14`           |
-| `images.git_sync`   | The git-sync image to use   | `registry.k8s.io/git-sync/git-sync:v4.0.0` |
+| Name               | Description                                                                                                                                               | Value                            |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
+| `swagger_ui.env`   | Additional [environment variables](https://github.com/swagger-api/swagger-ui/blob/master/docs/usage/configuration.md) to add to the swagger-ui container. | `[]`                             |
+| `swagger_ui.image` | The swagger-ui image to use                                                                                                                               | `swaggerapi/swagger-ui:v5.17.14` |
