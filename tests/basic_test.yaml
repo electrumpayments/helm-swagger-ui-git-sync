@@ -36,9 +36,6 @@ tests:
       - documentIndex: 0
         matchSnapshot:  # swagger-ui points to the correct path
           path: spec.template.spec.containers[0].env
-      - documentIndex: 1
-        matchSnapshot:
-          path: data
 
   - it: additional envs
     set:

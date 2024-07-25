@@ -21,16 +21,6 @@ custom git config:
   2: |
     - name: SWAGGER_JSON
       value: /git/current/my/cool/path.yaml
-  3: |
-    git-sync-init.sh: |
-      #!/bin/sh
-      swagger_path="my/cool/path.yaml"
-      echo "Waiting for swagger file to appear at repo-relative path: $swagger_path"
-      until test -f "/git/current/$swagger_path"; do
-        echo "Swagger file not present. Waiting for git-sync..."
-        sleep 5
-      done
-      echo "Swagger file present!"
 defaults:
   1: |
     apiVersion: apps/v1
@@ -67,7 +57,7 @@ defaults:
               volumeMounts:
                 - mountPath: /git
                   name: git-content
-                - mountPath: /docker-entrypoint.d/50-git-sync-init.sh
+                - mountPath: /docker-entrypoint.d/35-git-sync-init.sh
                   name: docker-init
                   subPath: git-sync-init.sh
             - args:
@@ -98,15 +88,15 @@ defaults:
               name: git-content
             - configMap:
                 name: swagger-my-app-docker-init
+              defaultMode: 493
               name: docker-init
   2: |
     apiVersion: v1
     data:
       git-sync-init.sh: |
         #!/bin/sh
-        swagger_path="src/main/resources/openapi.yaml"
-        echo "Waiting for swagger file to appear at repo-relative path: $swagger_path"
-        until test -f "/git/current/$swagger_path"; do
+        echo "Waiting for swagger file to appear at path: $SWAGGER_JSON"
+        until test -f "$SWAGGER_JSON"; do
           echo "Swagger file not present. Waiting for git-sync..."
           sleep 5
         done
@@ -169,4 +159,5 @@ with ssh:
         secretName: my-app-secret
     - configMap:
         name: swagger-my-app-docker-init
+      defaultMode: 493
       name: docker-init

@@ -30,7 +30,7 @@ spec:
             - name: git-content
               mountPath: /git
             - name: docker-init
-              mountPath: /docker-entrypoint.d/50-git-sync-init.sh
+              mountPath: /docker-entrypoint.d/35-git-sync-init.sh
               subPath: git-sync-init.sh
           resources:
             requests:
@@ -83,6 +83,7 @@ spec:
                 path: id_rsa
         {{- end }}
         - name: docker-init
+          defaultMode: 0755
           configMap:
             name: {{ $.Release.Name }}-docker-init
       securityContext: # volume mounting help
@@ -95,9 +96,8 @@ metadata:
 data:
   git-sync-init.sh: |
     #!/bin/sh
-    swagger_path="{{$.Values.git_sync.swagger_path}}"
-    echo "Waiting for swagger file to appear at repo-relative path: $swagger_path"
-    until test -f "/git/current/$swagger_path"; do
+    echo "Waiting for swagger file to appear at path: $SWAGGER_JSON"
+    until test -f "$SWAGGER_JSON"; do
       echo "Swagger file not present. Waiting for git-sync..."
       sleep 5
     done
