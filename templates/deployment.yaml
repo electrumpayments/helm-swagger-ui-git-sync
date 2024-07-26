@@ -95,12 +95,12 @@ spec:
           emptyDir: {}
         {{- if $.Values.git_sync.ssh.existing_secret_name }}
         - name: ssh-key
-          defaultMode: 0400
           secret:
             secretName: {{ $.Values.git_sync.ssh.existing_secret_name | quote }}
             items:
               - key: {{ required "git_sync.ssh.existing_secret_key must be set explicitly" $.Values.git_sync.ssh.existing_secret_key | quote }}
                 path: id_rsa
+            defaultMode: 0400
         {{- end }}
         - name: docker-init
           configMap:

@@ -185,9 +185,9 @@ with ssh:
   2: |
     - emptyDir: {}
       name: git-content
-    - defaultMode: 256
-      name: ssh-key
+    - name: ssh-key
       secret:
+        defaultMode: 256
         items:
           - key: deploy-key
             path: id_rsa
