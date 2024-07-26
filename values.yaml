@@ -5,7 +5,7 @@ git_sync:
   ## @param git_sync.ref branch or tag to check out
   ref: main
   ## @param git_sync.refresh_period how frequently to poll for changes
-  refresh_period: 60s
+  refresh_period: 300s
   ## @param git_sync.swagger_path repo-relative path to the target swagger file (OpenAPI spec)
   swagger_path: swagger/swagger.yaml
   ssh:

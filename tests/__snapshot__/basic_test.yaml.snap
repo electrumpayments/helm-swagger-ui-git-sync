@@ -64,7 +64,7 @@ defaults:
                 - --repo=git@github.com:swagger-api/swagger-petstore.git
                 - --ref=main
                 - --depth=1
-                - --period=60s
+                - --period=300s
                 - --link=current
                 - --root=/git
                 - --verbose=6
@@ -95,9 +95,17 @@ defaults:
     data:
       git-sync-init.sh: |
         #!/bin/sh
+        max_tries=12
+        tries=0
+
         echo "Waiting for swagger file to appear at path: $SWAGGER_JSON"
         until test -f "$SWAGGER_JSON"; do
           echo "Swagger file not present. Waiting for git-sync..."
+          tries=$((tries+1))
+          if [ $tries -ge $max_tries ]; then
+            echo "Giving up after $max_tries tries"
+            exit 1
+          fi
           sleep 5
         done
         echo "Swagger file present!"
@@ -124,7 +132,7 @@ with ssh:
       - --repo=git@github.com:swagger-api/swagger-petstore.git
       - --ref=main
       - --depth=1
-      - --period=60s
+      - --period=300s
       - --link=current
       - --root=/git
       - --ssh=true

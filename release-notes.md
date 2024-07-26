@@ -1,4 +1,4 @@
-# helm-swagger-ui-git-sync release notes
+# Changelog
 
 ## Version 0.0.1 - XX July 2024
 

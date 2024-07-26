@@ -1,4 +1,4 @@
-name: Helm workflow
+name: Build & Test Helm
 on:
   push:
     branches:
@@ -23,9 +23,10 @@ jobs:
     steps:
       - name: Install readme-generator
         run: |
-          mkdir /tmp/readmegen
-          cd /tmp/readmegen
-          git clone --depth 1 https://github.com/bitnami/readme-generator-for-helm .
+          cd /tmp
+          curl -LSs "https://github.com/bitnami/readme-generator-for-helm/archive/refs/tags/2.6.1.tar.gz" | tar -xzvf -
+          mv readme-generator-for-helm* readmegen
+          cd readmegen
           npm install
           npm install pkg
           node_modules/.bin/pkg . -o readmegen

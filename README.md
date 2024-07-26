@@ -1,11 +1,15 @@
 # Swagger UI + git-sync Helm chart
 
 This chart deploys a [Swagger UI frontend](https://hub.docker.com/r/swaggerapi/swagger-ui) with a
-[git-sync sidecar](https://github.com/kubernetes/git-sync/) that continually pulls from a git repo, thus allowing
-swagger-ui to always serve the latest version of an OpenAPI spec stored in git.
+[git-sync sidecar](https://github.com/kubernetes/git-sync/) that periodically polls a git repo for changes, thus 
+allowing swagger-ui to always serve the latest version of an OpenAPI spec stored in git.
 
 The chart can be configured to pull from a public repo, or private repo via SSH. Note that this chart does not create
 secrets - if using SSH you must create the relevant secret by external means.
+
+## Installation
+
+//TODO update once public
 
 ## Parameters
 
@@ -27,3 +31,8 @@ secrets - if using SSH you must create the relevant secret by external means.
 | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
 | `swagger_ui.env`   | Additional [environment variables](https://github.com/swagger-api/swagger-ui/blob/master/docs/usage/configuration.md) to add to the swagger-ui container. | `[]`                             |
 | `swagger_ui.image` | The swagger-ui image to use                                                                                                                               | `swaggerapi/swagger-ui:v5.17.14` |
+
+
+## Changelog
+
+- [release-notes.md](release-notes.md)
