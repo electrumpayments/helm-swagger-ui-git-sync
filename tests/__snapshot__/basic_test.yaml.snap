@@ -60,6 +60,7 @@ defaults:
                   cpu: 20m
                   memory: 64Mi
               startupProbe:
+                failureThreshold: 24
                 httpGet:
                   path: /
                   port: http

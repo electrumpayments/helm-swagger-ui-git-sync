@@ -48,6 +48,7 @@ spec:
               port: http
               path: /
             periodSeconds: 5
+            failureThreshold: 24
 
         - name: git-sync
           image: {{ $.Values.git_sync.image | quote }}
