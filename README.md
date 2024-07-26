@@ -19,7 +19,7 @@ secrets - if using SSH you must create the relevant secret by external means.
 | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
 | `git_sync.repo_url`                 | (required) SSH or HTTPS url of the repo to clone                                                                             | `nil`                                      |
 | `git_sync.ref`                      | branch or tag to check out                                                                                                   | `main`                                     |
-| `git_sync.refresh_period`           | how frequently to poll for changes                                                                                           | `60s`                                      |
+| `git_sync.refresh_period`           | how frequently to poll for changes                                                                                           | `300s`                                     |
 | `git_sync.swagger_path`             | repo-relative path to the target swagger file (OpenAPI spec)                                                                 | `swagger/swagger.yaml`                     |
 | `git_sync.ssh.existing_secret_name` | if set, configure git-sync to use SSH. This secret should contain a private SSH key and should be created outside this chart | `nil`                                      |
 | `git_sync.ssh.existing_secret_key`  | The key of the secret that contains the private SSH key                                                                      | `nil`                                      |
