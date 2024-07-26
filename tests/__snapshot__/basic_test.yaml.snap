@@ -106,8 +106,8 @@ defaults:
             - emptyDir: {}
               name: git-content
             - configMap:
+                defaultMode: 493
                 name: swagger-my-app-docker-init
-              defaultMode: 493
               name: docker-init
   2: |
     apiVersion: v1
@@ -193,6 +193,6 @@ with ssh:
             path: id_rsa
         secretName: my-app-secret
     - configMap:
+        defaultMode: 493
         name: swagger-my-app-docker-init
-      defaultMode: 493
       name: docker-init
