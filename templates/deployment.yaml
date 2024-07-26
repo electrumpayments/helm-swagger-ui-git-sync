@@ -38,6 +38,16 @@ spec:
               memory: 64Mi
             limits:
               memory: 64Mi
+          livenessProbe:
+            httpGet:
+              port: http
+              path: /
+            periodSeconds: 10
+          startupProbe:
+            httpGet:
+              port: http
+              path: /
+            periodSeconds: 5
 
         - name: git-sync
           image: {{ $.Values.git_sync.image | quote }}
@@ -70,6 +80,15 @@ spec:
               memory: 32Mi
             limits:
               memory: 32Mi
+          startupProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - "test -d /git/current"
+            periodSeconds: 5
+            failureThreshold: 24
+
       volumes:
         - name: git-content
           emptyDir: {}

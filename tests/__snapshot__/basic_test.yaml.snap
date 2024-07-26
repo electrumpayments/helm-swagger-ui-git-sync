@@ -44,6 +44,11 @@ defaults:
                 - name: SWAGGER_JSON
                   value: /git/current/src/main/resources/openapi.yaml
               image: swaggerapi/swagger-ui:v5.17.14
+              livenessProbe:
+                httpGet:
+                  path: /
+                  port: http
+                periodSeconds: 10
               name: swagger-ui
               ports:
                 - containerPort: 8080
@@ -54,6 +59,11 @@ defaults:
                 requests:
                   cpu: 20m
                   memory: 64Mi
+              startupProbe:
+                httpGet:
+                  path: /
+                  port: http
+                periodSeconds: 5
               volumeMounts:
                 - mountPath: /git
                   name: git-content
@@ -78,6 +88,14 @@ defaults:
                   memory: 32Mi
               securityContext:
                 runAsUser: 65533
+              startupProbe:
+                exec:
+                  command:
+                    - sh
+                    - -c
+                    - test -d /git/current
+                failureThreshold: 24
+                periodSeconds: 5
               volumeMounts:
                 - mountPath: /git
                   name: git-content
@@ -149,6 +167,14 @@ with ssh:
         memory: 32Mi
     securityContext:
       runAsUser: 65533
+    startupProbe:
+      exec:
+        command:
+          - sh
+          - -c
+          - test -d /git/current
+      failureThreshold: 24
+      periodSeconds: 5
     volumeMounts:
       - mountPath: /git
         name: git-content
