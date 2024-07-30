@@ -1,0 +1,54 @@
+suite: Basic templating
+values:
+  - test-values.yaml
+release:
+  name: swagger-my-app
+  namespace: my-app-ns
+tests:
+  - it: defaults
+    asserts:
+      - matchSnapshot: {}
+
+  - it: with ssh
+    set:
+      git_sync.ssh:
+        existing_secret_name: my-app-secret
+        existing_secret_key: deploy-key
+    template: deployment.yaml
+    documentIndex: 0
+    asserts:
+      - matchSnapshot:  # secret must be mounted and configured for git-sync
+          path: spec.template.spec.containers[1]
+      - matchSnapshot:  # secret volume must exist
+          path: spec.template.spec.volumes
+
+  - it: custom git config
+    set:
+      git_sync:
+        ref: dev
+        refresh_period: 12h
+        swagger_path: my/cool/path.yaml
+    template: deployment.yaml
+    asserts:
+      - documentIndex: 0
+        matchSnapshot:  # git-sync args defined correctly
+          path: spec.template.spec.containers[1].args
+      - documentIndex: 0
+        matchSnapshot:  # swagger-ui points to the correct path
+          path: spec.template.spec.containers[0].env
+
+  - it: additional envs
+    set:
+      swagger_ui.env:
+        - name: DEFAULT_MODEL_EXPAND_DEPTH
+          value: "5"
+        - name: TRY_IT_OUT_ENABLED
+          valueFrom:
+            configMapKeyRef:
+              name: my-app-cm
+              key: try_it_out
+    template: deployment.yaml
+    documentIndex: 0
+    asserts:
+      - matchSnapshot:
+          path: spec.template.spec.containers[0].env

@@ -1,0 +1,44 @@
+name: Build & Test Helm
+on:
+  push:
+    branches:
+      - "**"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: d3adb5/helm-unittest-action@v2
+        with:
+          unittest-version: v0.4.2
+
+      - run: helm lint . -f tests/test-values.yaml
+  
+  update-readme:
+    runs-on: ubuntu-latest
+    needs: ["test"]
+    if: ${{ github.ref != 'refs/heads/main' }}
+    steps:
+      - name: Install readme-generator
+        run: |
+          cd /tmp
+          curl -LSs "https://github.com/bitnami/readme-generator-for-helm/archive/refs/tags/2.6.1.tar.gz" | tar -xzvf -
+          mv readme-generator-for-helm* readmegen
+          cd readmegen
+          npm install
+          npm install pkg
+          node_modules/.bin/pkg . -o readmegen
+
+      - uses: actions/checkout@v4
+
+      - name: Update README
+        run: /tmp/readmegen/readmegen -v values.yaml -r README.md
+
+      - name: Commit README
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: README.md
+          message: Updating README.md [skip ci]
+          push: true

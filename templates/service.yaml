@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $.Release.Name | quote }}
+  labels:
+    io.electrum/app: {{ $.Release.Name | quote }}
+spec:
+  selector:
+    io.electrum/app: {{ $.Release.Name | quote }}
+  ports:
+    - name: http
+      port: 80
+      targetPort: http

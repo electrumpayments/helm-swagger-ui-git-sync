@@ -1,0 +1,130 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $.Release.Name | quote }}
+  labels:
+    io.electrum/app: {{ $.Release.Name | quote }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.electrum/app: {{ $.Release.Name | quote }}
+  template:
+    metadata:
+      labels:
+        io.electrum/app: {{ $.Release.Name | quote }}
+    spec:
+      containers:
+        - name: swagger-ui
+          image: {{ $.Values.swagger_ui.image | quote }}
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: SWAGGER_JSON
+              value: "/git/current/{{$.Values.git_sync.swagger_path}}"
+            {{- if $.Values.swagger_ui.env -}}
+            {{- $.Values.swagger_ui.env | toYaml | nindent 12 }}
+            {{- end }}
+          volumeMounts:  # container runs as root, thus has access to all mounted files
+            - name: git-content
+              mountPath: /git
+            - name: docker-init
+              mountPath: /docker-entrypoint.d/35-git-sync-init.sh
+              subPath: git-sync-init.sh
+          resources:
+            requests:
+              cpu: 20m
+              memory: 64Mi
+            limits:
+              memory: 64Mi
+          livenessProbe:
+            httpGet:
+              port: http
+              path: /
+            periodSeconds: 10
+          startupProbe:
+            httpGet:
+              port: http
+              path: /
+            periodSeconds: 5
+            failureThreshold: 24
+
+        - name: git-sync
+          image: {{ $.Values.git_sync.image | quote }}
+          args:
+            - --repo={{ required "git_sync.repo_url must be set" $.Values.git_sync.repo_url }}
+            - --ref={{ $.Values.git_sync.ref }}
+            - --depth=1
+            - --period={{ $.Values.git_sync.refresh_period }}
+            - --link=current
+            - --root=/git
+            {{- if $.Values.git_sync.ssh.existing_secret_name }}
+            - --ssh=true
+            - --ssh-key-file=/etc/git-secret/id_rsa
+            - --ssh-known-hosts=false
+            {{- end }}
+            - --verbose=6
+          volumeMounts:
+            - name: git-content
+              mountPath: /git
+            {{- if $.Values.git_sync.ssh.existing_secret_name }}
+            - name: ssh-key
+              mountPath: /etc/git-secret
+              readOnly: true
+            {{- end }}
+          resources:
+            requests:
+              cpu: 20m
+              memory: 32Mi
+            limits:
+              memory: 32Mi
+          startupProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - "test -d /git/current"
+            periodSeconds: 5
+            failureThreshold: 24
+
+      volumes:
+        - name: git-content
+          emptyDir: {}
+        {{- if $.Values.git_sync.ssh.existing_secret_name }}
+        - name: ssh-key
+          secret:
+            secretName: {{ $.Values.git_sync.ssh.existing_secret_name | quote }}
+            items:
+              - key: {{ required "git_sync.ssh.existing_secret_key must be set explicitly" $.Values.git_sync.ssh.existing_secret_key | quote }}
+                path: id_rsa
+            defaultMode: 0400
+        {{- end }}
+        - name: docker-init
+          configMap:
+            name: {{ $.Release.Name }}-docker-init
+            defaultMode: 0755
+      securityContext:
+        fsGroup: 65533  # git-sync user ID. Needed to let git-sync read the mounted SSH key
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $.Release.Name }}-docker-init
+data:
+  git-sync-init.sh: |
+    #!/bin/sh
+    max_tries=12
+    tries=0
+
+    echo "Waiting for swagger file to appear at path: $SWAGGER_JSON"
+    until test -f "$SWAGGER_JSON"; do
+      echo "Swagger file not present. Waiting for git-sync..."
+      tries=$((tries+1))
+      if [ $tries -ge $max_tries ]; then
+        echo "Giving up after $max_tries tries"
+        exit 1
+      fi
+      sleep 5
+    done
+    echo "Swagger file present!"
