@@ -73,8 +73,6 @@ spec:
               mountPath: /etc/git-secret
               readOnly: true
             {{- end }}
-          securityContext:
-            runAsUser: 65533  # Same as fsGroup
           resources:
             requests:
               cpu: 20m
@@ -107,7 +105,7 @@ spec:
             name: {{ $.Release.Name }}-docker-init
             defaultMode: 0755
       securityContext:
-        fsGroup: 65533  # all mounted files will be accessible by this user/group ID
+        fsGroup: 65533  # git-sync user ID. Needed to let git-sync read the mounted SSH key
 ---
 apiVersion: v1
 kind: ConfigMap

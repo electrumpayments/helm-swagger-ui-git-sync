@@ -87,8 +87,6 @@ defaults:
                 requests:
                   cpu: 20m
                   memory: 32Mi
-              securityContext:
-                runAsUser: 65533
               startupProbe:
                 exec:
                   command:
@@ -166,8 +164,6 @@ with ssh:
       requests:
         cpu: 20m
         memory: 32Mi
-    securityContext:
-      runAsUser: 65533
     startupProbe:
       exec:
         command:
