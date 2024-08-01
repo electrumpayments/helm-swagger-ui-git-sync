@@ -1,0 +1,7 @@
+{
+  "editor.wordWrap": "wordWrapColumn",
+    "yaml.format.printWidth": 120,
+    "editor.rulers": [
+      120
+    ]
+}
