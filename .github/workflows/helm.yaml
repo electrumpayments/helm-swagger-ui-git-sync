@@ -68,7 +68,7 @@ jobs:
         working-directory: charts/swagger-ui-git-sync
       - name: Version enforcer
         run: |
-          if [ ${{ !contains(steps.chart-details.version, '-') && github.ref != 'refs/heads/main'}} ]; then
+          if [ ${{ (!contains(steps.chart-details.outputs.version, '-')) && (github.ref != 'refs/heads/main') }} ]; then
             echo "Error: attempting to release a final version from a non-main branch!"
             exit 1
           fi
@@ -78,7 +78,7 @@ jobs:
         with:
           charts_dir: "charts"
           # If SNAPSHOT, overwrite release. Else, skip release if it already exists
-          skip_existing: ${{ ! contains(steps.chart-details.version, '-SNAPSHOT') }}
+          skip_existing: ${{ ! contains(steps.chart-details.outputs.version, '-SNAPSHOT') }}
           pages_branch: gh-pages
           config: helm-releaser-config.yaml
         env:

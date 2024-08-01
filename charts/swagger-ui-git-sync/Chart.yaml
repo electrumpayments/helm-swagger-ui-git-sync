@@ -1,7 +1,15 @@
 apiVersion: v2
+type: application
 name: swagger-ui-git-sync
 description: A Swagger UI deployment, using git-sync to fetch the swagger.yaml
-type: application
+icon: https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Swagger-logo.png/500px-Swagger-logo.png
+home: https://electrumpayments.github.io/helm-swagger-ui-git-sync/
+sources:
+  - https://github.com/electrumpayments/helm-swagger-ui-git-sync
+maintainers:
+  - name: Electrum Payments Platform Team
+    email: platforms@electrum.co.za
+
 
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
