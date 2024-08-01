@@ -7,9 +7,23 @@ allowing swagger-ui to always serve the latest version of an OpenAPI spec stored
 The chart can be configured to pull from a public repo, or private repo via SSH. Note that this chart does not create
 secrets - if using SSH you must create the relevant secret by external means.
 
-## Installation
+## Using the Chart
 
-//TODO update once public
+```sh
+# Add repo
+helm repo add electrum-swagger https://electrumpayments.github.io/helm-swagger-ui-git-sync/
+# List charts
+helm search repo electrum-swagger
+# List versions (add `--devel` to list non-final versions)
+helm search repo electrum-swagger/swagger-ui-git-sync --versions
+```
+
+### Installation
+
+This chart can be installed into a cluser using any mechanism that supports helm, for example:
+
+- [`helm install`](https://helm.sh/docs/helm/helm_install/) (not recommended)
+- [ArgoCD application](https://argo-cd.readthedocs.io/en/stable/user-guide/helm/)
 
 ## Parameters
 
@@ -35,4 +49,4 @@ secrets - if using SSH you must create the relevant secret by external means.
 
 ## Changelog
 
-- [release-notes.md](release-notes.md)
+- [release-notes.md]([release-notes.md](https://github.com/electrumpayments/helm-swagger-ui-git-sync/blob/main/release-notes.md))
