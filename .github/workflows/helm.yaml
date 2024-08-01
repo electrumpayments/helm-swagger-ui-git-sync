@@ -68,7 +68,7 @@ jobs:
         working-directory: charts/swagger-ui-git-sync
       - name: Version enforcer
         run: |
-          if [ ${{ (!contains(steps.chart-details.outputs.version, '-')) && (github.ref != 'refs/heads/main') }} ]; then
+          if ${{ (!contains(steps.chart-details.outputs.version, '-')) && (github.ref != 'refs/heads/main') }}; then
             echo "Error: attempting to release a final version from a non-main branch!"
             exit 1
           fi
