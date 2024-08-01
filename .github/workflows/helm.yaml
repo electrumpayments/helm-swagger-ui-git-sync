@@ -76,7 +76,7 @@ jobs:
       - name: Release chart
         uses: helm/chart-releaser-action@v1
         with:
-          charts_dir: "."
+          charts_dir: "charts"
           skip_existing: true  # TODO false for SNAPSHOTS
           pages_branch: gh-pages
           config: helm-releaser-config.yaml
