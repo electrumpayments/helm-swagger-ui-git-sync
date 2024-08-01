@@ -60,6 +60,8 @@ jobs:
     # TODO [release-type helm]
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # chart-releaser needs a full history
       - name: Configure Git
         run: |
           git config user.name "$GITHUB_ACTOR"
