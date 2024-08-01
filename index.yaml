@@ -1,0 +1,13 @@
+apiVersion: v1
+entries:
+  swagger-ui-git-sync:
+  - apiVersion: v2
+    created: "2024-08-01T10:33:52.143808476Z"
+    description: A Swagger UI deployment, using git-sync to fetch the swagger.yaml
+    digest: addb56c347d71d6ca62daae62753c8dcbfcb288f6e3d52078c2d0e96e5b27f9d
+    name: swagger-ui-git-sync
+    type: application
+    urls:
+    - https://github.com/electrumpayments/helm-swagger-ui-git-sync/releases/download/swagger-ui-git-sync-0.0.1-SNAPSHOT/swagger-ui-git-sync-0.0.1-SNAPSHOT.tgz
+    version: 0.0.1-SNAPSHOT
+generated: "2024-08-01T10:33:52.143814006Z"
