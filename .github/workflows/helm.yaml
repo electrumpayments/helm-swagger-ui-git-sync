@@ -65,6 +65,12 @@ jobs:
         id: chart-details
         run: |
           cat Chart.yaml | yq -r ".version" | awk '{printf "version=%s", $0 }' - >> $GITHUB_OUTPUT
+          if ${{ github.ref == 'refs/heads/main' }}; then
+            echo "latest=true" >> $GITHUB_OUTPUT
+          else
+            # must be blank
+            echo "latest=" >> $GITHUB_OUTPUT
+          fi
         working-directory: charts/swagger-ui-git-sync
       - name: Version enforcer
         run: |
@@ -84,7 +90,7 @@ jobs:
           skip_existing: true
           pages_branch: gh-pages
           config: helm-releaser-config.yaml
-          mark_as_latest: ${{ github.ref == 'refs/heads/main' }}
+          mark_as_latest: "${{ steps.chart-details.outputs.latest }}"
         env:
           CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
