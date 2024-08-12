@@ -81,8 +81,7 @@ jobs:
         uses: helm/chart-releaser-action@v1
         with:
           charts_dir: "charts"
-          # If SNAPSHOT, overwrite release. Else, skip release if it already exists
-          skip_existing: ${{ ! contains(steps.chart-details.outputs.version, '-SNAPSHOT') }}
+          skip_existing: true
           pages_branch: gh-pages
           config: helm-releaser-config.yaml
         env:
