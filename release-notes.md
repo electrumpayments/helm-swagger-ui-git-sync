@@ -1,5 +1,5 @@
 # Changelog
 
-## Version 0.0.1 - XX July 2024
+## Version 1.0.0 - 12 August 2024
 
-- Initial release
+- Initial release. See README for features, config, and usage.
