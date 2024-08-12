@@ -73,6 +73,10 @@ jobs:
             exit 1
           fi
 
+      - name: Copy resources to chart
+        run: |
+          cp README.md LICENSE charts/swagger-ui-git-sync/
+
       - name: Release chart and update public index
         uses: helm/chart-releaser-action@v1
         with:
