@@ -1,5 +1,8 @@
 # Swagger UI + git-sync Helm chart
 
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/swagger-ui-git-sync)]
+(https://artifacthub.io/packages/search?repo=swagger-ui-git-sync)
+
 This chart deploys a [Swagger UI frontend](https://hub.docker.com/r/swaggerapi/swagger-ui) with a
 [git-sync sidecar](https://github.com/kubernetes/git-sync/) that periodically polls a git repo for changes, thus 
 allowing swagger-ui to always serve the latest version of an OpenAPI spec stored in git.
@@ -49,4 +52,4 @@ This chart can be installed into a cluser using any mechanism that supports helm
 
 ## Changelog
 
-- [release-notes.md]([release-notes.md](https://github.com/electrumpayments/helm-swagger-ui-git-sync/blob/main/release-notes.md))
+- [release-notes.md](https://github.com/electrumpayments/helm-swagger-ui-git-sync/blob/main/release-notes.md)
