@@ -21,42 +21,6 @@ entries:
     urls:
     - https://github.com/electrumpayments/helm-swagger-ui-git-sync/releases/download/swagger-ui-git-sync-1.0.1/swagger-ui-git-sync-1.0.1.tgz
     version: 1.0.1
-  - apiVersion: v2
-    created: "2024-08-12T10:48:35.624239566Z"
-    description: A Swagger UI deployment, using git-sync to fetch the swagger.yaml
-    digest: d11f948a44fb4fb515f7cc1fac20e7b9d13cecf1d9f42da55af3290063e53dec
-    home: https://electrumpayments.github.io/helm-swagger-ui-git-sync/
-    icon: https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Swagger-logo.png/500px-Swagger-logo.png
-    maintainers:
-    - email: platforms@electrum.co.za
-      name: Electrum Payments Platforms Team
-    name: swagger-ui-git-sync
-    sources:
-    - https://github.com/electrumpayments/helm-swagger-ui-git-sync
-    type: application
-    urls:
-    - https://github.com/electrumpayments/helm-swagger-ui-git-sync/releases/download/swagger-ui-git-sync-1.0.1-SNAPSHOT/swagger-ui-git-sync-1.0.1-SNAPSHOT.tgz
-    version: 1.0.1-SNAPSHOT
-  - annotations:
-      artifacthub.io/changes: |
-        - https://github.com/electrumpayments/helm-swagger-ui-git-sync/blob/main/release-notes.md
-      artifacthub.io/license: GPL-3.0-or-later
-    apiVersion: v2
-    created: "2024-08-12T11:12:39.506108231Z"
-    description: A Swagger UI deployment, using git-sync to fetch the swagger.yaml
-    digest: f3397f9046eca5f43119c838b97dfa6aabc5e814dac7894fd80b75fc55f66f88
-    home: https://electrumpayments.github.io/helm-swagger-ui-git-sync/
-    icon: https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Swagger-logo.png/500px-Swagger-logo.png
-    maintainers:
-    - email: platforms@electrum.co.za
-      name: Electrum Payments Platforms Team
-    name: swagger-ui-git-sync
-    sources:
-    - https://github.com/electrumpayments/helm-swagger-ui-git-sync
-    type: application
-    urls:
-    - https://github.com/electrumpayments/helm-swagger-ui-git-sync/releases/download/swagger-ui-git-sync-1.0.1-SNAPSHOT/swagger-ui-git-sync-1.0.1-SNAPSHOT.tgz
-    version: 1.0.1-SNAPSHOT
   - annotations:
       artifacthub.io/changes: |
         - https://github.com/electrumpayments/helm-swagger-ui-git-sync/blob/main/release-notes.md
@@ -93,31 +57,6 @@ entries:
     urls:
     - https://github.com/electrumpayments/helm-swagger-ui-git-sync/releases/download/swagger-ui-git-sync-1.0.0/swagger-ui-git-sync-1.0.0.tgz
     version: 1.0.0
-  - apiVersion: v2
-    created: "2024-08-01T10:33:52.143808476Z"
-    description: A Swagger UI deployment, using git-sync to fetch the swagger.yaml
-    digest: addb56c347d71d6ca62daae62753c8dcbfcb288f6e3d52078c2d0e96e5b27f9d
-    name: swagger-ui-git-sync
-    type: application
-    urls:
-    - https://github.com/electrumpayments/helm-swagger-ui-git-sync/releases/download/swagger-ui-git-sync-0.0.1-SNAPSHOT/swagger-ui-git-sync-0.0.1-SNAPSHOT.tgz
-    version: 0.0.1-SNAPSHOT
-  - apiVersion: v2
-    created: "2024-08-01T11:16:19.983799154Z"
-    description: A Swagger UI deployment, using git-sync to fetch the swagger.yaml
-    digest: 58b6cf975043a3a0cd7a2dc8379ceaec646fa9930ac99f9dda4b62cc12c9eec1
-    home: https://electrumpayments.github.io/helm-swagger-ui-git-sync/
-    icon: https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Swagger-logo.png/500px-Swagger-logo.png
-    maintainers:
-    - email: platforms@electrum.co.za
-      name: Electrum Payments Platform Team
-    name: swagger-ui-git-sync
-    sources:
-    - https://github.com/electrumpayments/helm-swagger-ui-git-sync
-    type: application
-    urls:
-    - https://github.com/electrumpayments/helm-swagger-ui-git-sync/releases/download/swagger-ui-git-sync-0.0.1-SNAPSHOT/swagger-ui-git-sync-0.0.1-SNAPSHOT.tgz
-    version: 0.0.1-SNAPSHOT
   - apiVersion: v2
     created: "2024-08-01T11:37:05.926101375Z"
     description: A Swagger UI deployment, using git-sync to fetch the swagger.yaml
