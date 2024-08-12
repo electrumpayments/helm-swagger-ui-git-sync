@@ -84,6 +84,7 @@ jobs:
           skip_existing: true
           pages_branch: gh-pages
           config: helm-releaser-config.yaml
+          mark_as_latest: ${{ github.ref == 'refs/heads/main' }}
         env:
           CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
