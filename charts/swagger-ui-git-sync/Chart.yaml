@@ -9,6 +9,10 @@ sources:
 maintainers:
   - name: Electrum Payments Platforms Team
     email: platforms@electrum.co.za
+annotations:
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/changes: |
+    - https://github.com/electrumpayments/helm-swagger-ui-git-sync/blob/main/release-notes.md
 
 
 # This is the chart version. This version number should be incremented each time you make changes
