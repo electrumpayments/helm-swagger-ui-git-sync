@@ -1,6 +1,6 @@
 # Swagger UI + git-sync Helm chart
 
-[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/swagger-ui-git-sync)]
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/swagger-ui-git-sync)]\
 (https://artifacthub.io/packages/search?repo=swagger-ui-git-sync)
 
 This chart deploys a [Swagger UI frontend](https://hub.docker.com/r/swaggerapi/swagger-ui) with a
