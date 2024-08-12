@@ -65,6 +65,12 @@ jobs:
         id: chart-details
         run: |
           cat Chart.yaml | yq -r ".version" | awk '{printf "version=%s", $0 }' - >> $GITHUB_OUTPUT
+          if ${{ github.ref == 'refs/heads/main' }}; then
+            echo "latest=true" >> $GITHUB_OUTPUT
+          else
+            # must be blank
+            echo "latest=" >> $GITHUB_OUTPUT
+          fi
         working-directory: charts/swagger-ui-git-sync
       - name: Version enforcer
         run: |
@@ -73,14 +79,18 @@ jobs:
             exit 1
           fi
 
+      - name: Copy resources to chart
+        run: |
+          cp README.md LICENSE charts/swagger-ui-git-sync/
+
       - name: Release chart and update public index
         uses: helm/chart-releaser-action@v1
         with:
           charts_dir: "charts"
-          # If SNAPSHOT, overwrite release. Else, skip release if it already exists
-          skip_existing: ${{ ! contains(steps.chart-details.outputs.version, '-SNAPSHOT') }}
+          skip_existing: true
           pages_branch: gh-pages
           config: helm-releaser-config.yaml
+          mark_as_latest: "${{ steps.chart-details.outputs.latest }}"
         env:
           CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
