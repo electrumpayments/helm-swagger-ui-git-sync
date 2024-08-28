@@ -1,0 +1,15 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  git-backup:
+    name: Git Backup
+    # For this Job we prefer GitHub-hosted runners because they do deep clones much faster.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: electrumpayments/action-git-backup@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
